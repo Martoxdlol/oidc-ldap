@@ -1,0 +1,14 @@
+doctype html
+html(lang="en")
+  head
+    title Servicio de autenticación de usuarios
+  body
+    form(action="/interaction/" + uid + "/confirm" method="post")
+      input(type="hidden" name="prompt" value="consent")
+      button(type="submit") Continue 
+
+
+//    <form autocomplete="off" action="https://auth--admin.coder.henryford.edu.ar/interaction/bgh4-xyTE3ddRWhL26pFu" method="post">
+//  <input type="hidden" name="prompt" value="consent">
+//  <button autofocus="" type="submit" class="login login-submit">Continue</button>
+//</form>

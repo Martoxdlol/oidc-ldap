@@ -13,6 +13,10 @@ interface LDAPConfig {
     adminBindDN: string // Example: CN=bind_user,CN=Users,DC=ad,DC=server,DC=example,DC=com
     adminBindPassword: string
     usernameAttribute: string // Example: sAMAccountName, Example: name
+    notIncludeDefaultAttributes: boolean
+    includeAttributes: string[]
+    excludeAttributes: string[]
+    queryAllAttributes: boolean
 }
 
 interface SMTPConfig {
@@ -25,6 +29,8 @@ interface SMTPConfig {
 }
 
 interface AppConfig {
+    // HTTP listen port
+    httpPort: number
     // Example: https://auth.example-oatuh-provider.com
     // Is the public url where this app is been deployed
     issuer: string
@@ -48,6 +54,7 @@ interface AppConfig {
 const ENABLE_PASSWORD_RESET = env_bool('ENABLE_PASSWORD_RESET', false)
 
 const config: AppConfig = {
+    httpPort: env_int('HTTP_PORT', 3000),
     issuer: env('ISSUER', 'Issuer must be provided. Ex: https://auth.example-oatuh-provider.com'),
     forceHTTPS: env_bool('FORCE_HTTPS', false),
     visibleDescription: env_string('VISIBLE_DESCRIPTION', 'Authentication service'),
@@ -60,6 +67,10 @@ const config: AppConfig = {
         host: env('LDAP_HOST', 'LDAP host must be defined'),
         searchBaseDN: env('LDAP_SEARCH_BASE_DN', 'LDAP Search base must be defined'),
         usernameAttribute: env_string('LDAP_USERNAME_ATTRIBUTE', 'name'),
+        notIncludeDefaultAttributes: env_bool('LDAP_NOT_INCLUDE_DEFAULT_ATTRIBUTES', false),
+        includeAttributes: env_string('LDAP_INCLUDE_ATTRIBUTES', '').split(','),
+        excludeAttributes: env_string('LDAP_EXCLUDE_ATTRIBUTES', '').split(','),
+        queryAllAttributes: env_bool('LDAP_QUERY_ALL_ATTRIBUTES', false)
     },
 }
 
@@ -109,5 +120,9 @@ class ConfigError extends Error {
         return `Configuration error []: ${this.message}`
     }
 }
+
+const runningOnDocker = process.env.RUNNING_ON_DOCKER
+
+export { runningOnDocker }
 
 export default config 

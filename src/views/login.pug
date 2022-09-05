@@ -1,0 +1,11 @@
+doctype html
+html(lang="en")
+    head
+        title Servicio de autenticación de usuarios
+    body
+        h1 Login 
+        form(action="/interaction/" + uid + "/login" method="post") 
+            input(type="hidden" name="prompt" value="login")
+            input(type="text" name="login")
+            input(type="password" name="password")
+            button(type="submit") LOGIN 
