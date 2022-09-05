@@ -1,7 +1,7 @@
 import { Configuration, Provider } from 'oidc-provider'
 import claims, { allClaims } from './claims';
 import config from './config';
-import { getCookieKeys } from './keys';
+import { getCookieKeys, getJWKs } from './keys';
 import { findUser } from './ldap/findUser';
 import { LDAPUserProfile, queryAttributes } from './ldap/profile';
 
@@ -30,9 +30,10 @@ function makeProvider() {
             required: () => false,
         },
         renderError: (ctx, out, error) => {
-            console.log(error)
+            console.error(error)
             out.error = error.message
         },
+        jwks: getJWKs(),
         async findAccount(ctx, id) {
             let account: LDAPUserProfile
             if (typeof id == 'string') {

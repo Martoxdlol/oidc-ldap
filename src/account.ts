@@ -80,8 +80,6 @@ class Account {
     }
 
     static async findByLogin(login) {
-        console.log(login)
-
         if (!logins.get(login)) {
             logins.set(login, new Account(login));
         }

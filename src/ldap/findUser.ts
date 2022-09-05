@@ -54,6 +54,7 @@ function findRawUser(username): Promise<RawLDAPProfile> {
 
 async function findUser(username: string) {
     const raw = await findRawUser(username)
+    if(!raw) return null
     return new LDAPUserProfile(raw)
 }
 
