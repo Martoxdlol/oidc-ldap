@@ -15,15 +15,15 @@ function makeProvider() {
             IdToken: 6000000,
             Grant: 6000000,
         },
-        clients: [
-            {
-                client_id: "oidcCLIENT",
-                client_secret: "Some_super_secret",
-                grant_types: ["authorization_code"],
-                redirect_uris: ["http://localhost:8080/auth/login/callback", "https://oidcdebugger.com/debug", "https://openidconnect.net/callback", "https://coder.henryford.edu.ar/oidc/callback"],
-                response_types: ["code",],
-            }
-        ],
+        // clients: [
+        //     {
+        //         client_id: "oidcCLIENT",
+        //         client_secret: "Some_super_secret",
+        //         grant_types: ["authorization_code"],
+        //         redirect_uris: ["http://localhost:8080/auth/login/callback", "https://oidcdebugger.com/debug", "https://openidconnect.net/callback", "https://coder.henryford.edu.ar/oidc/callback"],
+        //         response_types: ["code",],
+        //     }
+        // ],
         cookies: {
             keys: getCookieKeys()
         },
