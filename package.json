@@ -2,9 +2,10 @@
   "name": "openid_oauth_ldap_server",
   "version": "1.0.0",
   "description": "A provider for Oauth2.0 and OpenIDConnect authentication with Active Directory or LDAP",
-  "main": "dist/index.js",
+  "main": "main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx ts-node main.ts",
+    "dev": "npx ts-node-dev main.ts"
   },
   "keywords": [
     "LDAP",
@@ -29,7 +30,9 @@
     "@types/fs-extra": "^9.0.13",
     "@types/ldapjs": "^2.2.4",
     "@types/lowdb": "^1.0.11",
+    "@types/nedb": "^1.8.12",
     "assert": "^2.0.0",
+    "cookie-session": "^2.0.0",
     "crypto-random-string": "^5.0.0",
     "dotenv": "^16.0.2",
     "easy-jose": "^1.0.5",
@@ -40,6 +43,8 @@
     "ldap-escape": "^2.0.6",
     "ldapjs": "^2.3.3",
     "nanoid": "^4.0.0",
+    "nedb": "^1.8.0",
+    "nedb-async": "^0.1.6",
     "node-jose": "^2.1.1",
     "node-jwk": "^0.1.0",
     "oidc-provider": "^7.11.5",

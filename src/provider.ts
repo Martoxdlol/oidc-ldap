@@ -1,4 +1,5 @@
 import { Configuration, Provider } from 'oidc-provider'
+import NeAdapter from './adapter';
 import claims, { allClaims } from './claims';
 import config from './config';
 import { getCookieKeys, getJWKs } from './keys';
@@ -7,6 +8,13 @@ import { LDAPUserProfile, queryAttributes } from './ldap/profile';
 
 function makeProvider() {
     const providerConfiguration: Configuration = {
+        adapter: (name: string) => new NeAdapter(name) as any,
+        ttl: {
+            AccessToken: 6000000,
+            Session: 6000000,
+            IdToken: 6000000,
+            Grant: 6000000,
+        },
         clients: [
             {
                 client_id: "oidcCLIENT",
@@ -47,7 +55,7 @@ function makeProvider() {
                 async claims(use, scope, claims, reserved) {
                     const attrs = {}
                     for (const claim of allClaims) {
-                        attrs[claim] = account[claim]
+                        attrs[claim] = account.get(claim)
                     }
                     return { ...attrs, sub: id };
                 },

@@ -1,0 +1,17 @@
+extends _layout.pug
+
+block body
+    h1 OpenID Connect Clients
+    .actions
+        a(href="/admin/add-client") Add new client
+        a(href="/admin/exit") Exit
+    each client in clients
+
+        a.client(href="/admin/clients/" + client._id)
+            h3.title= client.name
+            p
+                b  client_id: 
+                | #{client.client_id.substring(0, 20) + '... ' + client.client_id.substring(client.client_id.length-20)}
+            p
+                b  callbacks: 
+                | #{client.callbacks.join(', ').substring(0, 60) + (client.callbacks.join(', ').length > 60 ? '...': '')}

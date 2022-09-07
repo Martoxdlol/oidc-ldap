@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import config from "../config";
 import getProvider from "../provider";
 
 async function interactionRouteHandler(req: Request, res: Response, next: NextFunction) {
@@ -9,10 +10,10 @@ async function interactionRouteHandler(req: Request, res: Response, next: NextFu
         } = await provider.interactionDetails(req, res);
 
         const client = await provider.Client.find(params.client_id as string);
-
         switch (prompt.name) {
             case 'login': {
                 return res.render('login', {
+                    config,
                     client,
                     uid,
                     details: prompt.details,
@@ -23,6 +24,7 @@ async function interactionRouteHandler(req: Request, res: Response, next: NextFu
             }
             case 'consent': {
                 return res.render('consent', {
+                    config,
                     client,
                     uid,
                     details: prompt.details,

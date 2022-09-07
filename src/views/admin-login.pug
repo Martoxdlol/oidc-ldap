@@ -1,0 +1,15 @@
+extends _layout.pug
+
+block body
+    h1 Login to clients admin panel
+    if error
+        p.description=error
+    form(action="/admin/login/" method="post") 
+
+        label.floating-label(for="username") Username 
+        input(type="text" name="username" id="username")
+
+        label.floating-label(for="password") Password
+        input(type="password" name="password" id="password")
+        
+        button(type="submit") Continue

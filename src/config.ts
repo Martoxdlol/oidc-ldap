@@ -28,6 +28,12 @@ interface SMTPConfig {
     sendFrom: string // example: password-reset@example.com
 }
 
+interface AdminConfig {
+    username: string
+    password: string
+    enabled: boolean
+}
+
 interface AppConfig {
     // HTTP listen port
     httpPort: number
@@ -49,9 +55,12 @@ interface AppConfig {
     SMTPConfig?: SMTPConfig
     // Enable LDAP user password reset via email
     enablePasswordReset: boolean
+    // Admin config (add/edit/remove clients)
+    adminConfig?: AdminConfig
 }
 
 const ENABLE_PASSWORD_RESET = env_bool('ENABLE_PASSWORD_RESET', false)
+const ENABLE_ADMIN_CONFIG = env_bool('ENABLE_ADMIN_CONFIG', true)
 
 const config: AppConfig = {
     httpPort: env_int('HTTP_PORT', 3000),
@@ -71,7 +80,7 @@ const config: AppConfig = {
         includeAttributes: env_string('LDAP_INCLUDE_ATTRIBUTES', '').split(','),
         excludeAttributes: env_string('LDAP_EXCLUDE_ATTRIBUTES', '').split(','),
         queryAllAttributes: env_bool('LDAP_QUERY_ALL_ATTRIBUTES', false)
-    },
+    }
 }
 
 if (ENABLE_PASSWORD_RESET) {
@@ -84,6 +93,16 @@ if (ENABLE_PASSWORD_RESET) {
         sendFrom: env('SMTP_SEND_FROM', 'Email sender address must be defined'),
     }
 }
+
+if (ENABLE_ADMIN_CONFIG) {
+    config.adminConfig = {
+        username: env('ADMIN_USERNAME', 'Admin username must be defined'),
+        password: env('ADMIN_PASSWORD', 'Admin password must be defined'),
+        enabled: true
+    }
+}
+
+
 
 function env_bool(envName: string, _default: boolean) {
     return (process.env[envName] || _default.toString()).toLocaleLowerCase().trim() === 'true'

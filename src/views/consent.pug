@@ -1,14 +1,11 @@
-doctype html
-html(lang="en")
-  head
-    title Servicio de autenticación de usuarios
-  body
+extends _layout.pug
+
+block body
+    img.banner(src=config.visibleImageFile, alt="Auth page banner")
+    h1=config.visibleTitle
+    p.description=config.visibleDescription
     form(action="/interaction/" + uid + "/confirm" method="post")
-      input(type="hidden" name="prompt" value="consent")
-      button(type="submit") Continue 
-
-
-//    <form autocomplete="off" action="https://auth--admin.coder.henryford.edu.ar/interaction/bgh4-xyTE3ddRWhL26pFu" method="post">
-//  <input type="hidden" name="prompt" value="consent">
-//  <button autofocus="" type="submit" class="login login-submit">Continue</button>
-//</form>
+        input(type="hidden" name="prompt" value="consent")
+        button(type="submit") Authorize 
+        if config.enablePasswordReset
+            a.password-reset(href="/reset-password") Cambiar contraseña

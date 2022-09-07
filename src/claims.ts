@@ -29,7 +29,13 @@ const claims: Claims = {
     ],
     groups: ['member_of'],
     ldap_attributes: queryAttributes.map(attr => 'ldap_' + attr),
-    ldap_raw_object: ['ldap_raw_object']
+    
+    ldap_raw_object: ['ldap_raw_object'],
+
+    ...queryAttributes.map(attr => 'ldap_' + attr).reduce((acc, key) => {
+        acc[key] = [key]
+        return acc
+    }, {})
 }
 
 const allClaims = []

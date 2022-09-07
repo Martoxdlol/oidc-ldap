@@ -16,13 +16,13 @@ function makeApp() {
 
     const app = express()
 
-    app.use(express.static(__dirname + '/public'));
+    app.use(express.static(path.resolve('public')));
 
     if (runningOnDocker) {
         app.use(express.static('/public'));
     }
 
-    app.set('views', path.join(__dirname, 'views'));
+    app.set('views', path.resolve('src/views'));
     app.set('view engine', 'pug');
 
     if (config.forceHTTPS) {

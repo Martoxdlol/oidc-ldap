@@ -1,11 +1,18 @@
-doctype html
-html(lang="en")
-    head
-        title Servicio de autenticación de usuarios
-    body
-        h1 Login 
-        form(action="/interaction/" + uid + "/login" method="post") 
-            input(type="hidden" name="prompt" value="login")
-            input(type="text" name="login")
-            input(type="password" name="password")
-            button(type="submit") LOGIN 
+extends _layout.pug
+
+block body
+    img.banner(src=config.visibleImageFile, alt="Auth page banner")
+    h1=config.visibleTitle
+    p.description=config.visibleDescription
+    form(action="/interaction/" + uid + "/login" method="post") 
+        input(type="hidden" name="prompt" value="login")
+
+        label.floating-label(for="username") Username 
+        input(type="text" name="login" id="username")
+
+        label.floating-label(for="password") Password
+        input(type="password" name="password" id="password")
+        
+        button(type="submit") Continue
+        if config.enablePasswordReset
+            a.password-reset(href="/reset-password") Cambiar contraseña

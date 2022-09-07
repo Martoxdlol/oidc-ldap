@@ -148,6 +148,12 @@ class LDAPUserProfile {
     toString() {
         return `${this.username} -> ${this.rawObject.substring(0, 100)}`
     }
+
+    get(name: string) {
+        if(this[name] !== undefined) return this[name]
+        if(name.startsWith('ldap_')) name = name.replace('ldap_', '')
+        return this.getAttribute(name)
+    }
 }
 
 

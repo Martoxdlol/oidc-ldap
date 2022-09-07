@@ -1,0 +1,26 @@
+extends _layout.pug
+
+block body
+    style=`main {max-width: 900px; width: 900px}`
+    h1 Open ID Connect Client
+    div.actions
+        a(href="/admin/clients/") Back
+        a(href="/admin/edit-client/" + _id) Edit client
+        form(method='post' action="/admin/remove-client/" + _id)
+            input(type="submit" value="Remove client") 
+    p.prop name
+        br
+        b #{name}
+    
+    p.prop callback_uri
+        br
+        b #{callbacks}
+    
+    p.prop client_id
+        br
+        b #{client_id}
+    
+    p.prop client_secret
+        br
+        b #{client_secret}
+    include _config_info

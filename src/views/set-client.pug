@@ -1,0 +1,16 @@
+extends _layout.pug
+
+block body
+    h1=edit ? 'Edit client' : 'Add client'
+    p.description Add new client that can use this OpenID provider
+    div.actions
+        a(href="/admin/clients/"+id) Back
+    form(action="/admin/save-client/"+id method="post") 
+
+        label.floating-label(for="name") Name 
+        input(type="text" name="name" id="name" value=name)
+
+        label.floating-label(for="callbacks") Callback url(s) separated with comas (,)
+        input(type="text" name="callbacks" id="callbacks" value=callbacks.join(', '))
+
+        button(type="submit") Continue

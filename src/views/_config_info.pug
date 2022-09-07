@@ -1,0 +1,10 @@
+br
+hr
+p
+    b Use this configuration for your services:
+p 
+    | issuer: 
+    b #{config.issuer}
+p
+    | openid-configuration: 
+    b #{config.issuer + '/.well-known/openid-configuration'}

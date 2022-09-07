@@ -1,4 +1,4 @@
-import db from "./db";
+import { keysDB } from "./db";
 import crypto from 'crypto'
 import { pem2jwk } from 'pem-jwk'
 import simplePem2jwk from 'simple-pem2jwk'
@@ -13,70 +13,6 @@ function genCookieKeys() {
     ]
 }
 
-async function asyncGetCookieKeys(): Promise<string[]> {
-    try {
-        await db.read()
-        const red = db.data['cookieKeys'] as string[]
-        if (red && typeof red[0] === 'string' && typeof red[1] === 'string' && red.length === 0 && red[0].length >= 10 && red[1].length >= 10) {
-            return red as string[]
-        } else {
-            const keys = genCookieKeys()
-            db.data['cookieKeys'] = keys
-            await db.write()
-            return keys
-        }
-    } catch (error) {
-        try {
-            db.data['cookieKeys'] = null
-            await db.write()
-        } catch (error) {
-            console.error("Database PROBLEM", error)
-        }
-        return genCookieKeys()
-    }
-}
-
-async function asyncGetJWKs(): Promise<any> {
-    try {
-        await db.read()
-        const red = db.data['jwks'] as any
-        if (red && Array.isArray(red.keys) && red.keys.length > 0) {
-            return red as any
-        } else {
-            const keys = await genJWKs()
-            db.data['jwks'] = keys as any
-            await db.write()
-            return keys
-        }
-    } catch (error) {
-        try {
-            db.data['jwks'] = await genJWKs()
-            await db.write()
-        } catch (error) {
-            console.error("Database PROBLEM", error)
-        }
-        return db.data['jwks']
-    }
-}
-
-let cookieKeys = genCookieKeys()
-let jwks = null
-
-async function initKeys() {
-    cookieKeys = await asyncGetCookieKeys()
-    jwks = await asyncGetJWKs()
-}
-
-function getCookieKeys() {
-    return cookieKeys
-}
-
-
-function getJWKs() {
-    return jwks
-}
-
-
 async function genJWKs() {
     const keyStore = JWK.createKeyStore()
     await keyStore.generate('RSA', 2048, { alg: 'RS256', use: 'sig' })
@@ -85,4 +21,77 @@ async function genJWKs() {
     return key
 }
 
-export { initKeys, getCookieKeys, getJWKs }
+class KeyDatabseInterface {
+    generate: () => any
+    validate: (any) => boolean
+    name: string
+    _value: any = null
+
+    constructor(name: string, generate: () => any, validate: (any) => boolean) {
+        this.generate = generate
+        this.validate = validate
+        this.name = name
+    }
+
+    get value() {
+        return this._value
+    }
+
+    async get() {
+        this._value = await this._get()
+        return this._value
+    }
+
+    async _get() {
+        try {
+            const doc = await keysDB.asyncFindOne({ _id: this.name }) as any
+            const value = doc ? doc.value : null
+
+            if (!value) {
+                const generated = await this.generate()
+                try {
+                    keysDB.insert({ _id: this.name, value: generated })
+                } catch (error) {
+                    console.error("Error saving new generated key for " + this.name)
+                }
+
+                return generated
+            }
+
+            try {
+                if (!this.validate(value)) throw true
+            } catch (error) {
+                console.error("Value for " + this.name + " is invalid")
+            }
+
+            return value
+        } catch (error) {
+            console.error("Error reading key for " + this.name)
+            return await this.generate()
+        }
+    }
+}
+
+const cookiesKeys = new KeyDatabseInterface('cookies', genCookieKeys, keys => {
+    return keys && typeof keys[0] === 'string' && typeof keys[1] === 'string' && keys.length === 0 && keys[0].length >= 10 && keys[1].length >= 10
+})
+
+const jwksKeys = new KeyDatabseInterface('jwks', genJWKs, keys => {
+    return keys && Array.isArray(keys.keys) && keys.keys.length > 0
+})
+
+async function initKeys() {
+    await cookiesKeys.get()
+    await jwksKeys.get()
+}
+
+function getCookieKeys() {
+    return cookiesKeys.value
+}
+
+function getJWKs() {
+    return jwksKeys.value
+}
+
+
+export { initKeys, getCookieKeys, getJWKs, randString }
