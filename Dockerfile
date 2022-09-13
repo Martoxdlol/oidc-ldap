@@ -20,9 +20,9 @@ COPY . .
 # Build app
 RUN npm run build
 
-RUN useradd -s /bin/bash user
-
-USER user
+# For now it will run using root beacuse of reading data in volume
+# RUN useradd -s /bin/bash user
+# USER user
 
 EXPOSE 3000
 CMD [ "node", "dist/main.js" ]
