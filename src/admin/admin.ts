@@ -92,7 +92,6 @@ export default function admin(app: any) {
 
         const isNew = id === 'new'
 
-
         let data: Client
         if (isNew) {
             data = {
@@ -121,7 +120,7 @@ export default function admin(app: any) {
         if (isNew) {
             result = await clientsDB.asyncInsert(data)
         } else {
-            result = await clientsDB.asyncUpdate({ _id: id }, { name: data.name, callbacks: data.callbacks })
+            result = await clientsDB.asyncUpdate({ _id: id }, { ...data, name: data.name, callbacks: data.callbacks })
         }
 
         res.redirect('/admin/clients/' + result._id)
