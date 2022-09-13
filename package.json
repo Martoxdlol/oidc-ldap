@@ -5,7 +5,9 @@
   "main": "main.ts",
   "scripts": {
     "start": "npx ts-node main.ts",
-    "dev": "npx ts-node-dev main.ts"
+    "dev": "npx ts-node-dev main.ts",
+    "build": "npx tsc",
+    "start_node": "node dist/main.js"
   },
   "keywords": [
     "LDAP",

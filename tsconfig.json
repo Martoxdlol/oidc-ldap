@@ -2,6 +2,7 @@
     "compilerOptions": {
         "noImplicitAny": false,
         "esModuleInterop": true,
-        "target": "ES5"
+        "target": "ES5",
+        "outDir": "dist"
     }
 }
