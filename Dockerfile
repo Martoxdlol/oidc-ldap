@@ -20,6 +20,8 @@ COPY . .
 # Build app
 RUN npm run build
 
+RUN useradd -s /bin/bash user
+
 USER user
 
 EXPOSE 3000
