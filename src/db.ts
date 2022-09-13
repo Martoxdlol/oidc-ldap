@@ -46,13 +46,23 @@ if (runningOnDocker) {
     basePath = '/data'
 }
 
-if (!fs.existsSync(basePath)){
+const keysPath = path.join(basePath, 'keys.json')
+const clientsPath = path.join(basePath, 'clients.json')
+const adapterPath = path.join(basePath, 'adapter.json')
+
+if (!fs.existsSync(basePath)) {
     fs.mkdirSync(basePath, { recursive: true });
 }
 
-const keysDB = new AsyncNedb({ filename: path.join(basePath, 'keys.json') });
-const clientsDB = new AsyncNedb({ filename: path.join(basePath, 'clients.json') });
-const adapterDB = new AsyncNedb({ filename: path.join(basePath, 'adapter.json') });
+for (const path of [keysPath, clientsPath, adapterPath]) {
+    if (!fs.existsSync(path)) {
+        fs.appendFileSync(path, '');
+    }
+}
+
+const keysDB = new AsyncNedb({ filename: keysPath });
+const clientsDB = new AsyncNedb({ filename: clientsPath });
+const adapterDB = new AsyncNedb({ filename: adapterPath });
 
 async function initDb() {
     await keysDB.asyncLoadDatabase()
