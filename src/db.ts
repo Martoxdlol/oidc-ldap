@@ -1,6 +1,7 @@
 import AsyncNedb from 'nedb-async'
 import { runningOnDocker } from './config';
 import path from 'path'
+import fs from 'fs'
 
 type JSONDATA = string | boolean | null | JSONMAP | JSONDATA[]
 
@@ -45,6 +46,9 @@ if (runningOnDocker) {
     basePath = '/data'
 }
 
+if (!fs.existsSync(basePath)){
+    fs.mkdirSync(basePath, { recursive: true });
+}
 
 const keysDB = new AsyncNedb({ filename: path.join(basePath, 'keys.json') });
 const clientsDB = new AsyncNedb({ filename: path.join(basePath, 'clients.json') });
